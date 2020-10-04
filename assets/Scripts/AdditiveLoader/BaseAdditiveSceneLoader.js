@@ -1,4 +1,5 @@
 const AdditiveNodeData = require('AdditiveNodeData');
+const AdditiveCanvasData = require('AdditiveCanvasData');
 
 /**
  * 
@@ -15,6 +16,7 @@ const self = cc.Class({
         this.carriedCanvasNodeArray = []
         this.nodeDataPerId = {};
         this.originSceneName = cc.director.getScene().name;
+        this.beforeLoadCanvasData = {};
         if(this.node.getComponent(cc.Canvas) != null){
             cc.error(
                 `${this.originSceneName} AdditiveSceneLoader is on canvas!
@@ -26,17 +28,67 @@ const self = cc.Class({
     loadScene(sceneName, callback){
         this.callback = callback;
         this.carriedNodeArray.push(...this.uncoupleNodes(cc.director.getScene().children));
-        this.carriedCanvasNodeArray.push(...this.uncoupleCanvasNodes(cc.director.getScene().getComponentInChildren(cc.Canvas)));
         this.registerIdArray(this.carriedNodeArray);
-        this.registerIdArray(this.carriedCanvasNodeArray);
+        this.prepareCanvasBeforeSceneLoad(cc.director.getScene().getComponentInChildren(cc.Canvas));
         cc.director.loadScene(sceneName, this.onSceneLoaded.bind(this));
     },
 
     onSceneLoaded(){
         this.checkIfIdAlreadyContained(cc.director.getScene().children);
-        this.acoplateCanvasNodes(cc.director.getScene().getComponentInChildren(cc.Canvas), this.carriedCanvasNodeArray);
+        this.prepareCanvasAfterSceneLoad(cc.director.getScene().getComponentInChildren(cc.Canvas));
         this.acoplateNodes(this.carriedNodeArray);
         this.callback();
+    },
+
+    prepareCanvasBeforeSceneLoad(canvas){
+        this.beforeLoadCanvasData = AdditiveCanvasData.factory(canvas, this.originSceneName);
+        this.carriedCanvasNodeArray.push(...this.uncoupleCanvasNodes(canvas));
+        this.registerIdArray(this.carriedCanvasNodeArray);
+        canvas.node.destroy();
+    },
+
+    prepareCanvasAfterSceneLoad(canvas){
+        if(!this.beforeLoadCanvasData.equals(AdditiveCanvasData.factory(canvas)))
+            cc.warn(`Scene ${this.beforeLoadCanvasData.originSceneName} canvas doesn't match with scene ${cc.director.getScene().name} data`);
+        this.acoplateCanvasNodes(canvas, this.carriedCanvasNodeArray);
+    },
+
+    uncoupleNodes(nodeArray){
+        let ret = [];
+        for(let node of nodeArray){
+            if(cc.game.isPersistRootNode(node))
+                continue;
+            cc.game.addPersistRootNode(node);
+            ret.push(node);
+        }
+        return ret;
+    },
+    
+    uncoupleCanvasNodes(canvas){
+        let ret = [];
+        if(canvas==null)
+            return ret;
+        while(canvas.node.childrenCount>0){
+            let child = canvas.node.children[0];
+            ret.push(child);
+            child.parent = canvas.node.parent;
+            cc.game.addPersistRootNode(child);
+        }
+        return ret;
+    },
+
+    acoplateCanvasNodes(canvas, nodeArray){
+        for(let node of nodeArray){
+            cc.game.removePersistRootNode(node);
+            node.parent = canvas.node;
+        }
+        nodeArray.length = 0;
+    },
+
+    acoplateNodes(nodeArray){
+        for(let node of nodeArray)
+            cc.game.removePersistRootNode(node);
+        nodeArray.length = 0;
     },
 
     checkIfIdAlreadyContained(nodeArray){
@@ -62,45 +114,5 @@ const self = cc.Class({
         for (let node of nodeArray)
             if(!this.nodeDataPerId.hasOwnProperty(node._id))
                 this.nodeDataPerId[node._id] = AdditiveNodeData.factory(node, this.originSceneName);
-    },
-
-    uncoupleNodes(nodeArray){
-        let ret = [];
-        for(let node of nodeArray){
-            if(cc.game.isPersistRootNode(node))
-                continue;
-            cc.game.addPersistRootNode(node);
-            ret.push(node);
-        }
-        return ret;
-    },
-    
-    // Also destroys canvas
-    uncoupleCanvasNodes(canvas){
-        let ret = [];
-        if(canvas==null)
-            return ret;
-        while(canvas.node.childrenCount>0){
-            let child = canvas.node.children[0];
-            ret.push(child);
-            child.parent = canvas.node.parent;
-            cc.game.addPersistRootNode(child);
-        }
-        canvas.node.destroy();
-        return ret;
-    },
-
-    acoplateCanvasNodes(canvas, nodeArray){
-        for(let node of nodeArray){
-            cc.game.removePersistRootNode(node);
-            node.parent = canvas.node;
-        }
-        nodeArray.length = 0;
-    },
-
-    acoplateNodes(nodeArray){
-        for(let node of nodeArray)
-            cc.game.removePersistRootNode(node);
-        nodeArray.length = 0;
     },
 });
