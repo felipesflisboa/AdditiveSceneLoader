@@ -9,7 +9,7 @@ const self = cc.Class({
 
     onLoad(){
         this._super();
-        if(groupMainSceneName=="")
+        if(this.groupMainSceneName=="")
             cc.error(`${this.originSceneName} AdditiveSceneLoader groupMainSceneName has empty!`);
         
     },
