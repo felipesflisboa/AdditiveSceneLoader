@@ -51,8 +51,8 @@ const self = cc.Class({
         for(let widget of cc.director.getScene().getComponentsInChildren(cc.Widget))
             widget.updateAlignment();
         self.loadInProgress = false;
-        cc.log("ended!");
-        //TODO call method  on every component
+        cc.log("ended!"); //remove
+        //TODO call method on every component
     },
 
     /**

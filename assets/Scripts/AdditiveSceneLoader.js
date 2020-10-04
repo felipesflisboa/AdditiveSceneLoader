@@ -7,6 +7,12 @@ const self = cc.Class({
         groupMainSceneName: "",
     },
 
+    onLoad(){
+        this._super();
+        if(groupMainSceneName=="")
+            cc.error(`${this.originSceneName} AdditiveSceneLoader groupMainSceneName has empty!`);
+        
+    },
     start(){
         if(!BaseAdditiveSceneLoader.loadInProgress)
             this.loadGroupMainScene();
