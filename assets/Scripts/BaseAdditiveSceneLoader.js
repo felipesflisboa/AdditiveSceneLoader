@@ -1,3 +1,5 @@
+const AdditiveNodeData = require('AdditiveNodeData');
+
 /**
  * 
  */
@@ -6,6 +8,8 @@ const self = cc.Class({
 
     statics:{
         loadInProgress: false,
+        nodeDataPerId: {},
+        
     },
 
     onLoad () {
@@ -24,7 +28,41 @@ const self = cc.Class({
         this.callback = callback;
         this.carriedNodeArray.push(...this.uncoupleNodes(cc.director.getScene().children));
         this.carriedCanvasNodeArray.push(...this.uncoupleCanvasNodes(cc.director.getScene().getComponentInChildren(cc.Canvas)));
+        this.registerIdArray(this.carriedNodeArray);
+        this.registerIdArray(this.carriedCanvasNodeArray);
         cc.director.loadScene(sceneName, this.onSceneLoaded.bind(this));
+    },
+
+    onSceneLoaded(){
+        this.checkIfIdAlreadyContained(cc.director.getScene().children);
+        this.acoplateCanvasNodes(cc.director.getScene().getComponentInChildren(cc.Canvas), this.carriedCanvasNodeArray);
+        this.acoplateNodes(this.carriedNodeArray);
+        this.callback();
+    },
+
+    checkIfIdAlreadyContained(nodeArray){
+        for (let node of nodeArray){
+            if(this.hasRepeatedId(node)){
+                cc.error(`${self.nodeDataPerId[node._id].name} from scene ${self.nodeDataPerId[node._id].originSceneName} `+ 
+                    `and ${node} from scene ${this.originSceneName} have the same ID!`+
+                    `\nTo solve this issue, duplicate one of these nodes and delete the original.`
+                );
+            }
+        }
+    },
+
+    hasRepeatedId(node){
+        return (
+            self.nodeDataPerId.hasOwnProperty(node._id) && 
+            !cc.isValid(self.nodeDataPerId[node._id].node) && 
+            node.getComponent(cc.Canvas) == null
+        );
+    },
+
+    registerIdArray(nodeArray){
+        for (let node of nodeArray)
+            if(!self.nodeDataPerId.hasOwnProperty(node._id))
+                self.nodeDataPerId[node._id] = AdditiveNodeData.factory(node, this.originSceneName);
     },
 
     uncoupleNodes(nodeArray){
@@ -51,12 +89,6 @@ const self = cc.Class({
         }
         canvas.node.destroy();
         return ret;
-    },
-
-    onSceneLoaded(){
-        this.acoplateCanvasNodes(cc.director.getScene().getComponentInChildren(cc.Canvas), this.carriedCanvasNodeArray);
-        this.acoplateNodes(this.carriedNodeArray);
-        this.callback();
     },
 
     acoplateCanvasNodes(canvas, nodeArray){
