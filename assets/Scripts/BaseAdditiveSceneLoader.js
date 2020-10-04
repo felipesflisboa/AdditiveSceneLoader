@@ -8,13 +8,12 @@ const self = cc.Class({
 
     statics:{
         loadInProgress: false,
-        nodeDataPerId: {},
-        
     },
 
     onLoad () {
         this.carriedNodeArray = []
         this.carriedCanvasNodeArray = []
+        this.nodeDataPerId = {};
         this.originSceneName = cc.director.getScene().name;
         if(this.node.getComponent(cc.Canvas) != null){
             cc.error(
@@ -43,7 +42,7 @@ const self = cc.Class({
     checkIfIdAlreadyContained(nodeArray){
         for (let node of nodeArray){
             if(this.hasRepeatedId(node)){
-                cc.error(`${self.nodeDataPerId[node._id].name} from scene ${self.nodeDataPerId[node._id].originSceneName} `+ 
+                cc.error(`${this.nodeDataPerId[node._id].name} from scene ${this.nodeDataPerId[node._id].originSceneName} `+ 
                     `and ${node} from scene ${this.originSceneName} have the same ID!`+
                     `\nTo solve this issue, duplicate one of these nodes and delete the original.`
                 );
@@ -53,16 +52,16 @@ const self = cc.Class({
 
     hasRepeatedId(node){
         return (
-            self.nodeDataPerId.hasOwnProperty(node._id) && 
-            !cc.isValid(self.nodeDataPerId[node._id].node) && 
+            this.nodeDataPerId.hasOwnProperty(node._id) && 
+            !cc.isValid(this.nodeDataPerId[node._id].node) && 
             node.getComponent(cc.Canvas) == null
         );
     },
 
     registerIdArray(nodeArray){
         for (let node of nodeArray)
-            if(!self.nodeDataPerId.hasOwnProperty(node._id))
-                self.nodeDataPerId[node._id] = AdditiveNodeData.factory(node, this.originSceneName);
+            if(!this.nodeDataPerId.hasOwnProperty(node._id))
+                this.nodeDataPerId[node._id] = AdditiveNodeData.factory(node, this.originSceneName);
     },
 
     uncoupleNodes(nodeArray){

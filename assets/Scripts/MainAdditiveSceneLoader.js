@@ -33,8 +33,9 @@ const self = cc.Class({
         this.loadRemainingScenes();
     },
 
-    onFirstSceneLoaded(firstSceneName){
-        this.loadedSceneNameArray.push(firstSceneName);
+    onFirstSceneLoaded(firstSceneLoader){
+        this.nodeDataPerId = firstSceneLoader.nodeDataPerId;
+        this.loadedSceneNameArray.push(firstSceneLoader.originSceneName);
         this.loadRemainingScenes();
     },
 

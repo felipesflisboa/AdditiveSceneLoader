@@ -27,6 +27,6 @@ const self = cc.Class({
         let mainLoader = cc.director.getScene().getComponentInChildren(require("MainAdditiveSceneLoader"))
         if(mainLoader==null)
             cc.error(`Main group scene on ${this.groupMainSceneName} doesn't have a MainAdditiveSceneLoader component!`);
-        mainLoader.onFirstSceneLoaded(this.originSceneName);
+        mainLoader.onFirstSceneLoaded(this);
     },
 });
