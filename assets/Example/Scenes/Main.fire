@@ -20,7 +20,7 @@
         "__id__": 12
       },
       {
-        "__id__": 14
+        "__id__": 13
       }
     ],
     "_active": true,
@@ -510,11 +510,7 @@
     },
     "_children": [],
     "_active": true,
-    "_components": [
-      {
-        "__id__": 13
-      }
-    ],
+    "_components": [],
     "_prefab": null,
     "_opacity": 255,
     "_color": {
@@ -564,19 +560,6 @@
     "_id": "fc33uVpMhB3qjupIUlDg65"
   },
   {
-    "__type__": "284c1b1sH1NUoVWfcHDTzMM",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 12
-    },
-    "_enabled": true,
-    "nodeToPrint": {
-      "__id__": 3
-    },
-    "_id": "b94iU/Wt5JZKJI3AxHNJYF"
-  },
-  {
     "__type__": "cc.Node",
     "_name": "AddictiveScene",
     "_objFlags": 0,
@@ -587,7 +570,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 15
+        "__id__": 14
       }
     ],
     "_prefab": null,
@@ -643,12 +626,9 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 14
+      "__id__": 13
     },
     "_enabled": true,
-    "canvas": {
-      "__id__": 10
-    },
     "groupSceneNameArray": [
       "A",
       "B"

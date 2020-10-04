@@ -52,7 +52,13 @@ const self = cc.Class({
             widget.updateAlignment();
         self.loadInProgress = false;
         cc.log("ended!"); //remove
-        //TODO call method on every component
+        this.scheduleOnce(this.afterAdditiveLoad, 0.1);
+    },
+
+    afterAdditiveLoad(){
+        let z = cc.director.getScene();
+        for(let callable of cc.director.getScene().getComponentsInChildren(require("CallableAfterAdditiveLoad")))
+            callable.afterAdditiveLoad();
     },
 
     /**
