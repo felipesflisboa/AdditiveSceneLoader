@@ -1,9 +1,20 @@
-
+/**
+ * 
+ */
 //TODO canvas check alert (different)
 //TODO check if isn't on canvas
 //TODO call AddictiveSceneLoader
-cc.Class({
+//TODO var
+//TODO test build
+//TODO canvas error message.
+//TODO scene name empty error message
+//TODO structure to check id errors
+const self = cc.Class({
     extends: cc.Component,
+
+    statics:{
+        loadInProgress: false,
+    },
 
     properties: {
         canvas: cc.Canvas,
@@ -12,13 +23,11 @@ cc.Class({
     onLoad () {
         this.carriedNodeArray = []
         this.carriedCanvasNodeArray = []
+        this.originSceneName = cc.director.getScene().name;
     },
 
-    start(){
-        this.loadScene("A");
-    },
-
-    loadScene(sceneName){
+    loadScene(sceneName, callback){
+        this.callback = callback;
         var z = cc.director.getScene();
         for(let node of cc.director.getScene().children){
             if(cc.game.isPersistRootNode(node))
@@ -26,6 +35,7 @@ cc.Class({
             cc.game.addPersistRootNode(node);
             this.carriedNodeArray.push(node);
         }
+        this.canvas = cc.director.getScene().getComponentInChildren(cc.Canvas);
         while(this.canvas.node.childrenCount>0){
             let child = this.canvas.node.children[0];
             this.carriedCanvasNodeArray.push(child);
@@ -33,6 +43,7 @@ cc.Class({
             cc.game.addPersistRootNode(child);
             //node.parent = cc.director.getScene();
         }
+        cc.log(`Destroying ${this.canvas.node.name}`);
         this.canvas.node.destroy();
         cc.director.loadScene(sceneName, this.onSceneLoaded.bind(this));
 
@@ -41,13 +52,16 @@ cc.Class({
     onSceneLoaded(){
         var z = cc.director.getScene();
         var canvas = cc.director.getScene().getComponentInChildren(cc.Canvas);
-        for(let node of this.carriedCanvasNodeArray)
+        for(let node of this.carriedCanvasNodeArray){
+            //if(node.parent != null)
+            //    continue;
+            cc.game.removePersistRootNode(node);
             node.parent = canvas.node;
-        for(let widget of canvas.node.getComponentsInChildren(cc.Widget))
-            widget.updateAlignment();
+        }
         for(let node of this.carriedNodeArray)
             cc.game.removePersistRootNode(node);
         this.carriedNodeArray.length = 0;
-        this.toPersistNodeArray = [];
+        this.carriedCanvasNodeArray.length = 0;
+        this.callback();
     }
 });
