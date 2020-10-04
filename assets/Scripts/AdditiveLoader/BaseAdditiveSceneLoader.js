@@ -1,4 +1,4 @@
-const AdditiveNodeData = require('AdditiveNodeData');
+const AdditiveNodeDataMap = require('AdditiveNodeDataMap');
 const AdditiveCanvasData = require('AdditiveCanvasData');
 
 /**
@@ -18,7 +18,7 @@ const self = cc.Class({
     onLoad () {
         this.carriedNodeArray = []
         this.carriedCanvasNodeArray = []
-        this.nodeDataPerId = {};
+        this.nodeDataMap = new AdditiveNodeDataMap();
         this.originSceneName = cc.director.getScene().name;
         this.beforeLoadCanvasData = {};
         if(this.node.getComponent(cc.Canvas) != null){
@@ -32,13 +32,13 @@ const self = cc.Class({
     loadScene(sceneName, callback){
         this.callback = callback;
         this.carriedNodeArray.push(...this.uncoupleNodes(cc.director.getScene().children));
-        this.registerIdArray(this.carriedNodeArray);
+        this.nodeDataMap.registerIdArray(this.carriedNodeArray, this.originSceneName);
         this.prepareCanvasBeforeSceneLoad(cc.director.getScene().getComponentInChildren(cc.Canvas));
         cc.director.loadScene(sceneName, this.onSceneLoaded.bind(this));
     },
     
     onSceneLoaded(){
-        this.checkIfIdAlreadyContained(cc.director.getScene().children);
+        this.nodeDataMap.checkIfIdAlreadyContained(cc.director.getScene().children, cc.director.getScene().name);
         this.prepareCanvasAfterSceneLoad(cc.director.getScene().getComponentInChildren(cc.Canvas));
         this.acoplateNodes(this.carriedNodeArray);
         this.callback();
@@ -48,7 +48,7 @@ const self = cc.Class({
         this.currentCanvasSortOrder = this.getCurrentCanvasSortOrder();
         this.beforeLoadCanvasData = AdditiveCanvasData.factory(canvas, this.originSceneName);
         this.carriedCanvasNodeArray.push(...this.uncoupleCanvasNodes(canvas));
-        this.registerIdArray(this.carriedCanvasNodeArray, this.currentCanvasSortOrder);
+        this.nodeDataMap.registerIdArray(this.carriedCanvasNodeArray, this.originSceneName, this.currentCanvasSortOrder);
         canvas.node.destroy();
     },
 
@@ -98,24 +98,6 @@ const self = cc.Class({
         canvasChildren.sort(((a, b) => this.getNodeSortPriority(a) - this.getNodeSortPriority(b)).bind(this));
         for(let i = 0; i < canvasChildren.length; i++)
             canvasChildren[i].setSiblingIndex(i);
-        /* //remove
-        for(let node of newNodeArray){
-            for (let i = 0; i < canvas.node.childrenCount; i++) {
-                const canvasChildren = canvas.node.children[i];
-                if(node==canvasChildren)
-                    continue;
-                let sort = this.getNodeSortOrder(canvasChildren);    //remove
-                if(this.getNodeSortOrder(canvasChildren) > this.currentCanvasSortOrder){
-                    node.setSiblingIndex(i);
-                    break;
-                }
-            }
-        }
-        */
-    },
-
-    compareCanvasNodes(a,b ){
-
     },
 
     acoplateNodes(nodeArray){
@@ -134,36 +116,11 @@ const self = cc.Class({
         return 0;
     },
 
-    checkIfIdAlreadyContained(nodeArray){
-        for (let node of nodeArray){
-            if(this.hasRepeatedId(node)){
-                cc.error(`${this.nodeDataPerId[node._id].name} from scene ${this.nodeDataPerId[node._id].originSceneName} `+ 
-                    `and ${node} from scene ${this.originSceneName} have the same ID!`+
-                    `\nTo solve this issue, duplicate one of these nodes and delete the original.`
-                );
-            }
-        }
-    },
-
-    hasRepeatedId(node){
-        return (
-            this.nodeDataPerId.hasOwnProperty(node._id) && 
-            !cc.isValid(this.nodeDataPerId[node._id].node) && 
-            node.getComponent(cc.Canvas) == null
-        );
-    },
-
-    registerIdArray(nodeArray, canvasSortOrder=0){
-        for (let node of nodeArray)
-            if(!this.nodeDataPerId.hasOwnProperty(node._id))
-                this.nodeDataPerId[node._id] = AdditiveNodeData.factory(node, canvasSortOrder, this.originSceneName);
-    },
-
     getNodeSortPriority(node){
         return this.getNodeSortOrder(node)*10000+node.getSiblingIndex();
     },
 
     getNodeSortOrder(node){
-        return this.nodeDataPerId.hasOwnProperty(node._id) ? this.nodeDataPerId[node._id].sortOrder : this.currentCanvasSortOrder;
+        return this.nodeDataMap.hasId(node._id) ? this.nodeDataMap.get(node._id).sortOrder : this.currentCanvasSortOrder;
     },
 });

@@ -34,7 +34,7 @@ const self = cc.Class({
     },
 
     onFirstSceneLoaded(firstSceneLoader){
-        this.nodeDataPerId = firstSceneLoader.nodeDataPerId;
+        this.nodeDataMap = firstSceneLoader.nodeDataMap;
         this.loadedSceneNameArray.push(firstSceneLoader.originSceneName);
         this.loadRemainingScenes();
     },
