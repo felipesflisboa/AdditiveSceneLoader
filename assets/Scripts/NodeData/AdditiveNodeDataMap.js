@@ -35,6 +35,6 @@ const self = cc.Class({
     },
 
     hasRepeatedId(node){
-        return this.hasId(node._id) &&  !cc.isValid(this.get(node._id).node) && node.getComponent(cc.Canvas) == null;
+        return this.hasId(node._id) &&  !cc.isValid(this.get(node._id).node);
     },
 });
