@@ -1,5 +1,11 @@
 const BaseAdditiveSceneLoader = require('BaseAdditiveSceneLoader')
 
+/**
+ * Loads all scenes on group that aren't loaded yet.
+ * 
+ * Add one on main scene with each other scene on groupSceneNameArray.
+ * For other group scenes, add an AdditiveNodeDataMap pointing to this component instance scene.
+ */
 const self = cc.Class({
     extends: BaseAdditiveSceneLoader,
 
@@ -52,12 +58,10 @@ const self = cc.Class({
         for(let widget of cc.director.getScene().getComponentsInChildren(cc.Widget))
             widget.updateAlignment();
         self.loadInProgress = false;
-        cc.log("ended!"); //remove
         this.scheduleOnce(this.afterAdditiveLoad, 0.1);
     },
 
     afterAdditiveLoad(){
-        let z = cc.director.getScene();
         for(let callable of cc.director.getScene().getComponentsInChildren(require("CallableAfterAdditiveLoad")))
             callable.afterAdditiveLoad();
     },

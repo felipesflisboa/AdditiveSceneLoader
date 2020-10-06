@@ -1,7 +1,6 @@
 /**
- * Callable after all group additive load ends
+ * Called after all group additive load ends.
  */
-
 cc.Class({
     extends: cc.Component,
 

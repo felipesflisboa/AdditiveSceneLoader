@@ -1,9 +1,6 @@
 const AdditiveNodeDataMap = require('AdditiveNodeDataMap');
 const AdditiveCanvasData = require('AdditiveCanvasData');
 
-/**
- * 
- */
 const self = cc.Class({
     extends: cc.Component,
 
@@ -107,8 +104,6 @@ const self = cc.Class({
     },
 
     getCurrentCanvasSortOrder(){
-        let b = cc.director.getScene().name; //remove
-        var a = cc.director.getScene().getComponentsInChildren(self); //remove
         for(let loader of cc.director.getScene().getComponentsInChildren(self))
             if(loader.originSceneName == cc.director.getScene().name)
                 return loader.canvasSortOrder;

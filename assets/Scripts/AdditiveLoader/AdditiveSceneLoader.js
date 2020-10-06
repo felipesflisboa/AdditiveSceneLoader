@@ -1,5 +1,10 @@
 const BaseAdditiveSceneLoader = require('BaseAdditiveSceneLoader')
 
+/**
+ * Loads the main group scene.
+ * 
+ * Add one for every scene on scene group. Except for main scene who have a MainAdditiveSceneLoader.
+ */
 const self = cc.Class({
     extends: BaseAdditiveSceneLoader,
 
