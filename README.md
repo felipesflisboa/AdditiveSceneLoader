@@ -22,11 +22,11 @@ For each scene group, do this:
 
 3. Besides widgets, all canvas from group can't contain other components because they will be destroyed when the load starts.
 
-Add all scenes to build.
+Add all scenes into build.
 
 ## Known Issues
 
-Nodes can't have the same id between the scenes. If a node has the same id, an error will be throw.
+Nodes can't have the same id between scenes. If this happen, an error will be throw displaying the name of the nodes with same ids.
 
 Nodes with same id are generated when a scene is create as duplicate from another scene. So, the same nodes have the same id between both scenes.
 
