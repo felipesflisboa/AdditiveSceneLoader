@@ -62,7 +62,7 @@ const self = cc.Class({
     },
 
     afterAdditiveLoad(){
-        for(let callable of cc.director.getScene().getComponentsInChildren(require("CallableAfterAdditiveLoad")))
+        for(let callable of cc.director.getScene().getComponentsInChildren(require("AdditiveComponent")))
             callable.afterAdditiveLoad();
     },
 

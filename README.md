@@ -8,7 +8,7 @@ Example: You have four scenes: Main, A, B and C. Loading one of these automatic 
 
 - Multiple scene groups
 - Sort canvas order between scenes
-- Callback for when all scenes from a group were loaded (add CallableAfterAdditiveLoad component)
+- Callback for when all scenes from a group were loaded (add CallableAfterAdditiveLoad component or extend AdditiveComponent)
 
 ## Install
 
