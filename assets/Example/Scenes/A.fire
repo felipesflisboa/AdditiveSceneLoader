@@ -20,7 +20,7 @@
         "__id__": 13
       },
       {
-        "__id__": 14
+        "__id__": 15
       }
     ],
     "_active": true,
@@ -180,7 +180,7 @@
       "array": [
         0,
         0,
-        253.74544330884055,
+        253.56037313587066,
         0,
         0,
         0,
@@ -540,7 +540,11 @@
     },
     "_children": [],
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 14
+      }
+    ],
     "_prefab": null,
     "_opacity": 255,
     "_color": {
@@ -590,6 +594,16 @@
     "_id": "11pOf5LYBEzpyaQ/uPm7lO"
   },
   {
+    "__type__": "3c79bQh4sNDZ5I/EXSG+lEP",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 13
+    },
+    "_enabled": true,
+    "_id": "4d3OPAuhFCF4t/tCE1tD7n"
+  },
+  {
     "__type__": "cc.Node",
     "_name": "Scene Loader",
     "_objFlags": 0,
@@ -600,7 +614,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 15
+        "__id__": 16
       }
     ],
     "_prefab": null,
@@ -656,7 +670,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 14
+      "__id__": 15
     },
     "_enabled": true,
     "canvasSortOrder": 1,

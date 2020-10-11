@@ -9,11 +9,11 @@ const self = cc.Class({
         let ret = new cc.Component.EventHandler();
         ret.target = this.node;
         ret.component = self.name;
-        ret.handler = this.onAfterAdditiveLoad.name;
+        ret.handler = this.afterAdditiveLoad.name;
         return ret;
     },
 
-    onAfterAdditiveLoad () {
-        cc.log("Programmatically calling a method on scene B after additive load.");
+    afterAdditiveLoad () {
+        cc.log("Programmatically calling a method on scene B after additive load. Uses CallableAfterAdditiveLoad.");
     },
 });
