@@ -52,7 +52,7 @@ const self = cc.Class({
     prepareCanvasAfterSceneLoad(canvas){
         this.currentCanvasSortOrder = this.getCurrentCanvasSortOrder();
         if(!this.beforeLoadCanvasData.equals(AdditiveCanvasData.factory(canvas)))
-            cc.warn(`Scene ${this.beforeLoadCanvasData.originSceneName} canvas doesn't match with scene ${cc.director.getScene().name} data`);
+            cc.warn(`Scene ${this.beforeLoadCanvasData.originSceneName} canvas doesn't match with scene ${cc.director.getScene().name} canvas attributes.`);
         this.acoplateCanvasNodes(canvas, this.carriedCanvasNodeArray);
     },
 
