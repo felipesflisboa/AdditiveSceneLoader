@@ -8,7 +8,7 @@ const self = cc.Class({
     createEvent(){
         let ret = new cc.Component.EventHandler();
         ret.target = this.node;
-        ret.component = self.name;
+        ret.component = cc.js.getClassName(self);
         ret.handler = this.afterAdditiveLoad.name;
         return ret;
     },
