@@ -15,16 +15,30 @@ const self = cc.Class({
             type: [cc.String],
             tooltip: "All scene names except self" 
         },
-
         SceneNamesToLoadArray: {
             visible: false,
             get: function(){
                 return CC_EDITOR ? null : this.getElementsNotOnSecondArray(this.groupSceneNameArray, this.loadedSceneNameArray);
             },
         },
+        /**
+         * Return 0-1 with many scenes loaded (not counting self).
+         * 0.5 means half scenes loaded.
+        **/
+        SceneLoadRatio: {
+            visible: false,
+            get: function(){
+                if(CC_EDITOR)
+                    return 0;
+                if(this.groupSceneNameArray.length==0)
+                    cc.error(`Main group scene on ${this.originSceneName} doesn't have scenes to load!`);
+                return (this.sceneLoadedCount-1)/this.groupSceneNameArray.length;
+            },
+        },
     },
 
     onLoad(){
+        this.sceneLoadedCount = 0; // Counts self
         this._super();
         this.loadedSceneNameArray = [this.originSceneName];
     },
@@ -42,10 +56,12 @@ const self = cc.Class({
     onFirstSceneLoaded(firstSceneLoader){
         this.nodeDataMap = firstSceneLoader.nodeDataMap;
         this.loadedSceneNameArray.push(firstSceneLoader.originSceneName);
+        this.sceneLoadedCount++;
         this.loadRemainingScenes();
     },
 
     loadRemainingScenes(){
+        this.sceneLoadedCount++;
         if(this.SceneNamesToLoadArray.length == 0){
             this.onAllLoadEnd();
             return;
