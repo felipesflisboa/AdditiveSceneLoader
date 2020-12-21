@@ -9,7 +9,7 @@ const self = cc.Class({
     },
 
     properties:{
-        canvasSortOrder: 0,
+        sortOrder: 0,
     },
 
     onLoad () {
@@ -29,12 +29,14 @@ const self = cc.Class({
     loadScene(sceneName, callback){
         this.callback = callback;
         this.carriedNodeArray.push(...this.uncoupleNodes(cc.director.getScene().children));
-        this.nodeDataMap.registerIdArray(this.carriedNodeArray, this.originSceneName);
+        this.currentSortOrder = this.getCurrentSortOrder();
+        this.registerNodeIdArray(this.carriedNodeArray);
         this.prepareCanvasBeforeSceneLoad(cc.director.getScene().getComponentInChildren(cc.Canvas));
         cc.director.loadScene(sceneName, this.onSceneLoaded.bind(this));
     },
     
     onSceneLoaded(){
+        this.currentSortOrder = this.getCurrentSortOrder();
         this.nodeDataMap.checkIfIdAlreadyContained(cc.director.getScene().children, cc.director.getScene().name);
         this.prepareCanvasAfterSceneLoad(cc.director.getScene().getComponentInChildren(cc.Canvas));
         this.acoplateNodes(this.carriedNodeArray);
@@ -42,15 +44,13 @@ const self = cc.Class({
     },
 
     prepareCanvasBeforeSceneLoad(canvas){
-        this.currentCanvasSortOrder = this.getCurrentCanvasSortOrder();
         this.beforeLoadCanvasData = GroupCanvasData.factory(canvas, this.originSceneName);
         this.carriedCanvasNodeArray.push(...this.uncoupleCanvasNodes(canvas));
-        this.nodeDataMap.registerIdArray(this.carriedCanvasNodeArray, this.originSceneName, this.currentCanvasSortOrder);
+        this.registerNodeIdArray(this.carriedCanvasNodeArray);
         canvas.node.destroy();
     },
 
     prepareCanvasAfterSceneLoad(canvas){
-        this.currentCanvasSortOrder = this.getCurrentCanvasSortOrder();
         if(!this.beforeLoadCanvasData.equals(GroupCanvasData.factory(canvas)))
             cc.warn(`Scene ${this.beforeLoadCanvasData.originSceneName} canvas doesn't match with scene ${cc.director.getScene().name} canvas attributes.`);
         this.acoplateCanvasNodes(canvas, this.carriedCanvasNodeArray);
@@ -86,28 +86,36 @@ const self = cc.Class({
             node.parent = canvas.node;
             node.setSiblingIndex(canvas.childrenCount-1);
         }
-        this.fixCanvasSortOrder(canvas);
+        this.fixSortOrder(canvas.node.children);
         nodeArray.length = 0;
     },
 
-    fixCanvasSortOrder(canvas){
-        let canvasChildren = [...canvas.node.children];
-        canvasChildren.sort(((a, b) => this.getNodeSortPriority(a) - this.getNodeSortPriority(b)).bind(this));
-        for(let i = 0; i < canvasChildren.length; i++)
-            canvasChildren[i].setSiblingIndex(i);
+    fixSortOrder(nodeArray){
+        nodeArray.sort((function(a, b){
+            let as = this.getNodeSortPriority(a);
+            let bs = this.getNodeSortPriority(b);
+            return this.getNodeSortPriority(a) - this.getNodeSortPriority(b);
+        } ).bind(this));
+        for(let i = 0; i < nodeArray.length; i++)
+            nodeArray[i].setSiblingIndex(i);
     },
 
     acoplateNodes(nodeArray){
         for(let node of nodeArray)
             cc.game.removePersistRootNode(node);
+        this.fixSortOrder(cc.director.getScene().children);
         nodeArray.length = 0;
     },
 
-    getCurrentCanvasSortOrder(){
+    registerNodeIdArray(nodeArray){
+        this.nodeDataMap.registerIdArray(nodeArray, this.originSceneName, this.currentSortOrder);
+    },
+
+    getCurrentSortOrder(){
         for(let loader of cc.director.getScene().getComponentsInChildren(self))
             if(loader.originSceneName == cc.director.getScene().name)
-                return loader.canvasSortOrder;
-        cc.error(`SceneLoader whith canvasSortOrder not found for scene ${cc.director.getScene().name}!`);
+                return loader.sortOrder;
+        cc.error(`SceneLoader whith sortOrder not found for scene ${cc.director.getScene().name}!`);
         return 0;
     },
 
@@ -116,6 +124,6 @@ const self = cc.Class({
     },
 
     getNodeSortOrder(node){
-        return this.nodeDataMap.hasId(node._id) ? this.nodeDataMap.get(node._id).sortOrder : this.currentCanvasSortOrder;
+        return this.nodeDataMap.hasId(node._id) ? this.nodeDataMap.get(node._id).sortOrder : this.currentSortOrder;
     },
 });

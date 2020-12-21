@@ -17,10 +17,10 @@ const self = cc.Class({
         return this.content.hasOwnProperty(id);
     },
 
-    registerIdArray(nodeArray, originSceneName, canvasSortOrder=0){
+    registerIdArray(nodeArray, originSceneName, sortOrder){
         for (let node of nodeArray)
             if(!this.hasId(node._id))
-                this.set(node._id, GroupNodeData.factory(node, canvasSortOrder, originSceneName));
+                this.set(node._id, GroupNodeData.factory(node, sortOrder, originSceneName));
     },
 
     checkIfIdAlreadyContained(nodeArray, nodeSceneName){
