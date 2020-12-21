@@ -91,7 +91,7 @@ const self = cc.Class({
     },
 
     fixSortOrder(nodeArray){
-        nodeArray.sort((() => this.getNodeSortPriority(a) - this.getNodeSortPriority(b)).bind(this));
+        nodeArray.sort(((a, b) => this.getNodeSortPriority(a) - this.getNodeSortPriority(b)).bind(this));
         for(let i = 0; i < nodeArray.length; i++)
             nodeArray[i].setSiblingIndex(i);
     },
