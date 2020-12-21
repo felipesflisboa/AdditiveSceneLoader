@@ -15,6 +15,16 @@ const self = cc.Class({
             type: [cc.String],
             tooltip: "All scene names except self" 
         },
+        shouldDisableExtraCameras: {
+            default: false,
+            tooltip: "When true, disable all extra cameras outside usedCameraArray" 
+        },
+        usedCameraArray: {
+            visible: function() {return this.shouldDisableExtraCameras}, 
+            default: [],
+            type: [cc.Camera],
+            tooltip: "Cameras to don't disable." 
+        },
         SceneNamesToLoadArray: {
             visible: false,
             get: function(){
@@ -74,7 +84,23 @@ const self = cc.Class({
         for(let widget of cc.director.getScene().getComponentsInChildren(cc.Widget))
             widget.updateAlignment();
         self.loadInProgress = false;
+        if(this.shouldDisableExtraCameras)
+            this.disableOtherCameras();
+        else
+            this.checkActiveCameraCount();
         this.scheduleOnce(this.afterAdditiveLoad, 0.1);
+    },
+
+    disableOtherCameras(){
+        for(let cam of cc.director.getScene().getComponentsInChildren(cc.Camera))
+            if(!this.usedCameraArray.includes(cam))
+                cam.node.active = false;
+    },
+
+    checkActiveCameraCount(){
+        let activeCamCount = cc.director.getScene().getComponentsInChildren(cc.Camera).filter((cam) => cam.enabled && cam.node.active).length;
+        if(activeCamCount > 1)
+            cc.warn(`There is ${activeCamCount} active cameras! If this isn't intended, toggle shouldDisableExtraCameras.`);
     },
 
     afterAdditiveLoad(){

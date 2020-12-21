@@ -665,6 +665,12 @@
       "B",
       "C"
     ],
+    "shouldDisableExtraCameras": true,
+    "usedCameraArray": [
+      {
+        "__id__": 4
+      }
+    ],
     "_id": "39c48zjNtIma4Y0cD7DQFk"
   }
 ]
