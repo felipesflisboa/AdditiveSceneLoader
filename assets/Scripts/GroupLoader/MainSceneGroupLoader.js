@@ -1,16 +1,16 @@
-const BaseAdditiveSceneLoader = require('BaseAdditiveSceneLoader')
+const BaseSceneGroupLoader = require('BaseSceneGroupLoader')
 
 /**
  * Loads all scenes on group that aren't loaded yet.
  * 
- * Add one on main scene with each other scene on groupSceneNameArray.
- * For other group scenes, add an AdditiveNodeDataMap pointing to this component instance scene.
+ * Add one on main scene with each other scene on sceneNameArray.
+ * For other group scenes, add an GroupNodeDataMap pointing to this component instance scene.
  */
 const self = cc.Class({
-    extends: BaseAdditiveSceneLoader,
+    extends: BaseSceneGroupLoader,
 
     properties: {
-        groupSceneNameArray: {
+        sceneNameArray: {
             default: [],
             type: [cc.String],
             tooltip: "All scene names except self" 
@@ -28,21 +28,21 @@ const self = cc.Class({
         SceneNamesToLoadArray: {
             visible: false,
             get: function(){
-                return CC_EDITOR ? null : this.getElementsNotOnSecondArray(this.groupSceneNameArray, this.loadedSceneNameArray);
+                return CC_EDITOR ? null : this.getElementsNotOnSecondArray(this.sceneNameArray, this.loadedSceneNameArray);
             },
         },
         /**
          * Return 0-1 with many scenes loaded (not counting self).
          * 0.5 means half scenes loaded.
         **/
-        SceneLoadRatio: {
+        LoadRatio: {
             visible: false,
             get: function(){
                 if(CC_EDITOR)
                     return 0;
-                if(this.groupSceneNameArray.length==0)
+                if(this.sceneNameArray.length==0)
                     cc.error(`Main group scene on ${this.originSceneName} doesn't have scenes to load!`);
-                return (this.sceneLoadedCount-1)/this.groupSceneNameArray.length;
+                return (this.sceneLoadedCount-1)/this.sceneNameArray.length;
             },
         },
     },
@@ -54,12 +54,12 @@ const self = cc.Class({
     },
 
     start(){
-        if(!BaseAdditiveSceneLoader.loadInProgress)
+        if(!BaseSceneGroupLoader.loadInProgress)
             this.loadAllScenes();
     },
 
     loadAllScenes(){
-        BaseAdditiveSceneLoader.loadInProgress = true;
+        BaseSceneGroupLoader.loadInProgress = true;
         this.loadRemainingScenes();
     },
 
@@ -88,7 +88,7 @@ const self = cc.Class({
             this.disableOtherCameras();
         else
             this.checkActiveCameraCount();
-        this.scheduleOnce(this.afterAdditiveLoad, 0.1);
+        this.scheduleOnce(this.afterGroupLoad, 0.1);
     },
 
     disableOtherCameras(){
@@ -103,9 +103,9 @@ const self = cc.Class({
             cc.warn(`There is ${activeCamCount} active cameras! If this isn't intended, toggle shouldDisableExtraCameras.`);
     },
 
-    afterAdditiveLoad(){
-        for(let callable of cc.director.getScene().getComponentsInChildren(require("AdditiveComponent")))
-            callable.afterAdditiveLoad();
+    afterGroupLoad(){
+        for(let callable of cc.director.getScene().getComponentsInChildren(require("GroupComponent")))
+            callable.afterGroupLoad();
     },
 
     /**

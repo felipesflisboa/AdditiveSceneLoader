@@ -1,4 +1,4 @@
-const AdditiveNodeData = require('AdditiveNodeData');
+const GroupNodeData = require('GroupNodeData');
 
 const self = cc.Class({
     ctor (){
@@ -20,7 +20,7 @@ const self = cc.Class({
     registerIdArray(nodeArray, originSceneName, canvasSortOrder=0){
         for (let node of nodeArray)
             if(!this.hasId(node._id))
-                this.set(node._id, AdditiveNodeData.factory(node, canvasSortOrder, originSceneName));
+                this.set(node._id, GroupNodeData.factory(node, canvasSortOrder, originSceneName));
     },
 
     checkIfIdAlreadyContained(nodeArray, nodeSceneName){

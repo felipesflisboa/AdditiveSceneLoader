@@ -619,7 +619,7 @@
     "component": "",
     "_componentId": "415d5FG5mRJyZnO0K4qPCMp",
     "handler": "printMessage",
-    "customEventData": "Called in scene C after all additive load. Configured on event handler."
+    "customEventData": "Called in scene C after all group load. Configured on event handler."
   },
   {
     "__type__": "415d5FG5mRJyZnO0K4qPCMp",

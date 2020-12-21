@@ -1,14 +1,14 @@
 /**
- * Called after all scene group additive load.
+ * Called after all scene group load.
  */
 cc.Class({
-    extends: require('AdditiveComponent'),
+    extends: require('GroupComponent'),
 
     properties: {
         eventCallback: [cc.Component.EventHandler],
     },
 
-    afterAdditiveLoad () {
+    afterGroupLoad () {
         for (let event of this.eventCallback)
             event.emit([event.customEventData]);
     },

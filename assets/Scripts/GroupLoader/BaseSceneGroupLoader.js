@@ -1,5 +1,5 @@
-const AdditiveNodeDataMap = require('AdditiveNodeDataMap');
-const AdditiveCanvasData = require('AdditiveCanvasData');
+const GroupNodeDataMap = require('GroupNodeDataMap');
+const GroupCanvasData = require('GroupCanvasData');
 
 const self = cc.Class({
     extends: cc.Component,
@@ -15,12 +15,12 @@ const self = cc.Class({
     onLoad () {
         this.carriedNodeArray = []
         this.carriedCanvasNodeArray = []
-        this.nodeDataMap = new AdditiveNodeDataMap();
+        this.nodeDataMap = new GroupNodeDataMap();
         this.originSceneName = cc.director.getScene().name;
         this.beforeLoadCanvasData = {};
         if(this.node.getComponent(cc.Canvas) != null){
             cc.error(
-                `${this.originSceneName} AdditiveSceneLoader is on canvas!
+                `${this.originSceneName} SceneGroupLoader is on canvas!
                 This script won't work on Canvas! Put this component on another node`
             );
         }
@@ -43,7 +43,7 @@ const self = cc.Class({
 
     prepareCanvasBeforeSceneLoad(canvas){
         this.currentCanvasSortOrder = this.getCurrentCanvasSortOrder();
-        this.beforeLoadCanvasData = AdditiveCanvasData.factory(canvas, this.originSceneName);
+        this.beforeLoadCanvasData = GroupCanvasData.factory(canvas, this.originSceneName);
         this.carriedCanvasNodeArray.push(...this.uncoupleCanvasNodes(canvas));
         this.nodeDataMap.registerIdArray(this.carriedCanvasNodeArray, this.originSceneName, this.currentCanvasSortOrder);
         canvas.node.destroy();
@@ -51,7 +51,7 @@ const self = cc.Class({
 
     prepareCanvasAfterSceneLoad(canvas){
         this.currentCanvasSortOrder = this.getCurrentCanvasSortOrder();
-        if(!this.beforeLoadCanvasData.equals(AdditiveCanvasData.factory(canvas)))
+        if(!this.beforeLoadCanvasData.equals(GroupCanvasData.factory(canvas)))
             cc.warn(`Scene ${this.beforeLoadCanvasData.originSceneName} canvas doesn't match with scene ${cc.director.getScene().name} canvas attributes.`);
         this.acoplateCanvasNodes(canvas, this.carriedCanvasNodeArray);
     },

@@ -660,7 +660,7 @@
     },
     "_enabled": true,
     "canvasSortOrder": 0,
-    "groupSceneNameArray": [
+    "sceneNameArray": [
       "A",
       "B",
       "C"

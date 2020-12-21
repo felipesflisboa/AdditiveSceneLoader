@@ -1,7 +1,7 @@
 cc.Class({
-    extends: require('AdditiveComponent'),
+    extends: require('GroupComponent'),
 
-    afterAdditiveLoad () {
-        cc.log("calling a method on scene A after additive load. Uses AdditiveComponent.");
+    afterGroupLoad () {
+        cc.log("calling a method on scene A after group load. Uses GroupComponent.");
     },
 });

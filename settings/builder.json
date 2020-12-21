@@ -1,5 +1,5 @@
 {
-  "title": "AdditiveSceneLoader",
+  "title": "SceneGroupLoader",
   "packageName": "org.cocos2d.demo",
   "startScene": "c9bebfeb-6770-4c9d-964b-476c30c6dfa7",
   "excludeScenes": [],

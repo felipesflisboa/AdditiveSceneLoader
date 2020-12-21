@@ -1,4 +1,4 @@
-# AdditiveSceneLoader
+# SceneGroupLoader
 
 Cocos Creator scripts to automatic load other scenes when a scene is loaded. 
 
@@ -8,7 +8,7 @@ Example: You have four scenes: Main, A, B and C. Loading one of these automatic 
 
 - Multiple scene groups
 - Sort canvas order between scenes
-- Callback for when all scenes from a group were loaded (add CallableAfterAdditiveLoad component or extend AdditiveComponent)
+- Callback for when all scenes from a group were loaded (add CallableAfterGroupLoad component or extend GroupComponent)
 
 ## Install
 
@@ -16,9 +16,9 @@ Copy the contents of assets folder to your project assets folder.
 
 For each scene group, do this:
 
-1. One should be the group main scene. On this scene, put a root node with MainAdditiveSceneLoader. This root node should have all other scenes names from group at groupSceneNameArray property.  
+1. One should be the group main scene. On this scene, put a root node with MainSceneGroupLoader. This root node should have all other scenes names from group at sceneNameArray property.  
 
-2. On every other scene, put a root node with AdditiveSceneLoader with group main scene name at groupMainSceneName.
+2. On every other scene, put a root node with SceneGroupLoader with group main scene name at groupMainSceneName.
 
 3. Besides widgets, all canvas from group can't contain other components because they will be destroyed when the load starts.
 
