@@ -86,20 +86,12 @@ const self = cc.Class({
             node.parent = canvas.node;
             node.setSiblingIndex(canvas.childrenCount-1);
         }
-        this.fixSortOrder(canvas.node.children);
         nodeArray.length = 0;
-    },
-
-    fixSortOrder(nodeArray){
-        nodeArray.sort(((a, b) => this.getNodeSortPriority(a) - this.getNodeSortPriority(b)).bind(this));
-        for(let i = 0; i < nodeArray.length; i++)
-            nodeArray[i].setSiblingIndex(i);
     },
 
     acoplateNodes(nodeArray){
         for(let node of nodeArray)
             cc.game.removePersistRootNode(node);
-        this.fixSortOrder(cc.director.getScene().children);
         nodeArray.length = 0;
     },
 

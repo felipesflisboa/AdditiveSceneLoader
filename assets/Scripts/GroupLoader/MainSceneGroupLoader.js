@@ -81,14 +81,19 @@ const self = cc.Class({
     },
 
     onAllLoadEnd(){
+        this.handleCameras();
+        this.fixAllSortOrder();
         for(let widget of cc.director.getScene().getComponentsInChildren(cc.Widget))
             widget.updateAlignment();
         self.loadInProgress = false;
+        this.scheduleOnce(this.afterGroupLoad, 0.1);
+    },
+
+    handleCameras(){
         if(this.shouldDisableExtraCameras)
             this.disableOtherCameras();
         else
             this.checkActiveCameraCount();
-        this.scheduleOnce(this.afterGroupLoad, 0.1);
     },
 
     disableOtherCameras(){
@@ -101,6 +106,17 @@ const self = cc.Class({
         let activeCamCount = cc.director.getScene().getComponentsInChildren(cc.Camera).filter((cam) => cam.enabled && cam.node.active).length;
         if(activeCamCount > 1)
             cc.warn(`There is ${activeCamCount} active cameras! If this isn't intended, toggle shouldDisableExtraCameras.`);
+    },
+
+    fixAllSortOrder(){
+        this.fixSortOrder(cc.director.getScene().children);
+        this.fixSortOrder(cc.director.getScene().getComponentInChildren(cc.Canvas).node.children);
+    },
+
+    fixSortOrder(nodeArray){
+        nodeArray.sort(((a, b) => this.getNodeSortPriority(a) - this.getNodeSortPriority(b)).bind(this));
+        for(let i = 0; i < nodeArray.length; i++)
+            nodeArray[i].setSiblingIndex(i);
     },
 
     afterGroupLoad(){
