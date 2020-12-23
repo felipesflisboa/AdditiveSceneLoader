@@ -51,8 +51,12 @@ const self = cc.Class({
     },
 
     prepareCanvasAfterSceneLoad(canvas){
-        if(!this.beforeLoadCanvasData.equals(GroupCanvasData.factory(canvas)))
-            cc.warn(`Scene ${this.beforeLoadCanvasData.originSceneName} canvas doesn't match with scene ${cc.director.getScene().name} canvas attributes.`);
+        if(!this.beforeLoadCanvasData.equals(GroupCanvasData.factory(canvas))){
+            cc.warn(
+                `Scene ${this.beforeLoadCanvasData.originSceneName} canvas has different parameters than scene ${cc.director.getScene().name} canvas.
+                Position, size and fits must be equal on all canvas of same group.`
+            );
+        }
         this.acoplateCanvasNodes(canvas, this.carriedCanvasNodeArray);
     },
 
@@ -103,7 +107,7 @@ const self = cc.Class({
         for(let loader of cc.director.getScene().getComponentsInChildren(self))
             if(loader.originSceneName == cc.director.getScene().name)
                 return loader.sortOrder;
-        cc.error(`SceneLoader whith sortOrder not found for scene ${cc.director.getScene().name}!`);
+        cc.error(`GroupSceneLoader not found for scene ${cc.director.getScene().name}!`);
         return 0;
     },
 

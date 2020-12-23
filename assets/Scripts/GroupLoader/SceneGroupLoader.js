@@ -31,7 +31,7 @@ const self = cc.Class({
     loadGroupOtherScenes(){
         let mainLoader = cc.director.getScene().getComponentInChildren(require("MainSceneGroupLoader"))
         if(mainLoader==null)
-            cc.error(`Main group scene on ${this.groupMainSceneName} doesn't have a MainSceneGroupLoader component!`);
+            cc.error(`${this.originSceneName} groupMainSceneName is ${this.groupMainSceneName}, but this scene doesn't have a node with MainSceneGroupLoader component!`);
         mainLoader.onFirstSceneLoaded(this);
     },
 });
