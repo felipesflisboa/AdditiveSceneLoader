@@ -86,7 +86,7 @@ const self = cc.Class({
         for(let widget of cc.director.getScene().getComponentsInChildren(cc.Widget))
             widget.updateAlignment();
         self.loadInProgress = false;
-        this.scheduleOnce(this.afterGroupLoad, 0.1);
+        this.scheduleOnce(this.afterGroupLoad, 0.01);
     },
 
     handleCameras(){
