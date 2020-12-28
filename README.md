@@ -40,9 +40,12 @@ On every scene loaded, all OnEnable of all currently loaded nodes are called.
 
 ### Extra load time
 
-The number of scenes adds a little overhead for scene loading time. Some tests on HTML5 platform (lowest time in seconds), with a project with a good number of resources:
+Each scene adds a little overhead for scene loading time. So, more scenes per group results in a bigger load time.
 
-|  | 18 scenes | 10 scenes | 3 scenes |  
-| Editor						| 23.9 | 18.2 | 11.9 | 
-| Build running on local server | 4.8  | 3.9  | 2.9  |
-| Build running on external		| 13.5 | 9.9  | 9.0  |
+Examples on HTML5 platform, using a project with a good number of resources. Lowest load time in seconds:
+
+| | 18 scenes | 10 scenes | 3 scenes |  
+|---|---|---|---|
+| Editor								| 23.9s | 18.2s | 11.9s | 
+| Build running on local server 		| 4.8s  | 3.9s  | 2.9s  |
+| Build running on external server		| 13.5s | 9.9s  | 9.0s  |
