@@ -45,6 +45,8 @@ const self = cc.Class({
 
     prepareCanvasBeforeSceneLoad(canvas){
         this.beforeLoadCanvasData = GroupCanvasData.factory(canvas, this.originSceneName);
+        this.checkCanvasComponents(canvas);
+        canvas.node.getComponentsInChildren(cc.Component)
         this.carriedCanvasNodeArray.push(...this.uncoupleCanvasNodes(canvas));
         this.registerNodeIdArray(this.carriedCanvasNodeArray);
         canvas.node.destroy();
@@ -97,6 +99,17 @@ const self = cc.Class({
         for(let node of nodeArray)
             cc.game.removePersistRootNode(node);
         nodeArray.length = 0;
+    },
+    
+    checkCanvasComponents(canvas){
+        if(!CC_DEBUG)
+            return;
+        for(let component of canvas.node.getComponents(cc.Component).filter(c => !(c instanceof cc.Canvas) && !(c instanceof cc.Widget))){
+            cc.warn(
+                `Scene ${this.beforeLoadCanvasData.originSceneName} canvas has ${component.__proto__.__classname__} that will be destroyed with canvas on scene load process.
+                Don't put other components on canvas.`
+            );
+        }
     },
 
     registerNodeIdArray(nodeArray){
