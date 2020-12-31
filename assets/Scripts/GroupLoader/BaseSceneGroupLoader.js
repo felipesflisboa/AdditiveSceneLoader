@@ -20,8 +20,8 @@ const self = cc.Class({
         this.beforeLoadCanvasData = {};
         if(this.node.getComponent(cc.Canvas) != null){
             cc.error(
-                `${this.originSceneName} SceneGroupLoader is on canvas!
-                This script won't work on Canvas! Put this component on another node`
+                `${this.originSceneName} SceneGroupLoader is on canvas! `+
+                `This script won't work on Canvas! Put this component on another node`
             );
         }
     },
@@ -55,8 +55,8 @@ const self = cc.Class({
     prepareCanvasAfterSceneLoad(canvas){
         if(!this.beforeLoadCanvasData.equals(GroupCanvasData.factory(canvas))){
             cc.warn(
-                `Scene ${this.beforeLoadCanvasData.originSceneName} canvas has different parameters than scene ${cc.director.getScene().name} canvas.
-                Position, size and fits must be equal on all canvas of same group.`
+                `Scene ${this.beforeLoadCanvasData.originSceneName} canvas has different parameters than scene ${cc.director.getScene().name} canvas.`+
+                `\nPosition, size and fits must be equal on all canvas of same group.`
             );
         }
         this.acoplateCanvasNodes(canvas, this.carriedCanvasNodeArray);
@@ -106,8 +106,8 @@ const self = cc.Class({
             return;
         for(let component of canvas.node.getComponents(cc.Component).filter(c => !(c instanceof cc.Canvas) && !(c instanceof cc.Widget))){
             cc.warn(
-                `Scene ${this.beforeLoadCanvasData.originSceneName} canvas has ${component.__proto__.__classname__} that will be destroyed with canvas on scene load process.
-                Don't put other components on canvas.`
+                `Scene ${this.beforeLoadCanvasData.originSceneName} canvas has ${component.__proto__.__classname__} that will be destroyed with canvas on scene load process.`+
+                `\nDon't put other components on canvas.`
             );
         }
     },
